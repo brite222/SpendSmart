@@ -1,0 +1,39 @@
+﻿@model IEnumerable<SpendSmart.Models.User>
+
+<h2>Users</h2>
+
+<!-- Create New User Button -->
+<a class="btn btn-primary mb-2" asp-action="Create" asp-controller="Users">Create New User</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Profession</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Age</td>
+                <td>@user.Address</td>
+                <td>@user.Profession</td>
+                <td>
+                    <!-- Edit User -->
+                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-controller="Users" asp-route-id="@user.Id">Edit</a>
+
+                    <!-- Delete User -->
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-controller="Users" asp-route-id="@user.Id">Delete</a>
+
+                    <!-- View User Expenses -->
+                    <a class="btn btn-sm btn-secondary" asp-action="ViewExpenses" asp-controller="Users" asp-route-id="@user.Id">Expenses</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+﻿@model SpendSmart.Models.User
+
+<h2>@Model.Name's Expenses</h2>
+
+@if (Model.Expenses.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Value</th>
+                <th>Quantity</th>
+                <th>Size</th>
+                <th>Color</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Model.Expenses)
+            {
+                <tr>
+                    <td>@expense.Description</td>
+                    <td>@expense.Value</td>
+                    <td>@expense.Quantity</td>
+                    <td>@expense.Size</td>
+                    <td>@expense.Color</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No expenses found for this user.</p>
+}

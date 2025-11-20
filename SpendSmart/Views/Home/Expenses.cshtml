@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SpendSmart.Models.Expense>
+
+<h2>Expenses</h2>
+
+<!-- Add Expense Button -->
+<a class="btn btn-primary mb-2" asp-action="CreateEditExpense">Add Expense</a>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Serial</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th>Quantity</th>
+                <th>User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td>@e.SerialNumber</td>
+                    <td>@e.Description</td>
+                    <td>@e.Value</td>
+                    <td>@e.Quantity</td>
+                    <td>@e.User?.Name ?? "N/A"</td> <!-- null-safe -->
+                    <td>
+                        <a class="btn btn-sm btn-info" asp-action="CreateEditExpense" asp-route-id="@e.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-action="DeleteExpense" asp-route-id="@e.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Display total expenses if set in controller -->
+    <h4>Total Expenses: @ViewBag.TotalExpenses</h4>
+}
+else
+{
+    <p>No expenses recorded.</p>
+}
