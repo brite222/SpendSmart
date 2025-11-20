@@ -30,66 +30,67 @@ public class HomeController : Controller
     }
 
     // GET: Create or Edit Expense
-    public IActionResult CreateEditExpense(int? id)
+    public IActionResult CreateEditExpense(int id = 0)
     {
-        Expense model;
+        ViewBag.UserList = new SelectList(_context.Users.ToList(), "Id", "Name");
 
-        if (id.HasValue)
-        {
-            model = _context.Expenses
-                .Include(e => e.User)
-                .FirstOrDefault(e => e.Id == id.Value);
+        if (id == 0)
+            return View(new Expense());
 
-            if (model == null) return NotFound();
-        }
-        else
-        {
-            model = new Expense();
-        }
+        var expense = _context.Expenses.FirstOrDefault(e => e.Id == id);
+        if (expense == null) return NotFound();
 
-        // Populate user dropdown
-        ViewBag.UserList = new SelectList(_context.Users.ToList(), "Id", "Name", model.UserId);
-
-        return View(model);
+        return View(expense);
     }
 
-    // POST: Create or Edit Expense
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CreateEditExpenseForm(Expense model)
+    public IActionResult CreateEditExpense(Expense model)
     {
-        // Validate User selection
-        if (model.UserId == 0)
+        // Ensure server-side defaults for required fields that aren't on the form,
+        // and remove any stale ModelState entries so validation uses the updated values.
+        if (string.IsNullOrWhiteSpace(model.SerialNumber))
         {
-            ModelState.AddModelError("UserId", "Please select a user.");
+            model.SerialNumber = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper();
+            ModelState.Remove(nameof(model.SerialNumber));
         }
 
+        if (string.IsNullOrWhiteSpace(model.Color))
+        {
+            model.Color = "Unknown";
+            ModelState.Remove(nameof(model.Color));
+        }
+
+        if (string.IsNullOrWhiteSpace(model.Size))
+        {
+            model.Size = "OneSize";
+            ModelState.Remove(nameof(model.Size));
+        }
+
+        // Re-populate dropdown and return if validation fails
         if (!ModelState.IsValid)
         {
-            // Re-populate dropdown and return view
             ViewBag.UserList = new SelectList(_context.Users.ToList(), "Id", "Name", model.UserId);
-            return View("CreateEditExpense", model);
+            return View(model);
         }
 
         if (model.Id == 0)
         {
-            // New Expense
-            model.SerialNumber = Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper();
             _context.Expenses.Add(model);
         }
         else
         {
-            // Update existing Expense
             var existing = _context.Expenses.AsNoTracking().FirstOrDefault(e => e.Id == model.Id);
             if (existing == null) return NotFound();
 
-            model.SerialNumber = existing.SerialNumber; // keep serial
+            model.SerialNumber = existing.SerialNumber;
             _context.Expenses.Update(model);
         }
 
         _context.SaveChanges();
         return RedirectToAction("Expenses");
     }
+
 
     // Delete Expense
     public IActionResult DeleteExpense(int id)

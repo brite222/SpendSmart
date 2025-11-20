@@ -2,8 +2,17 @@
 
 <h2>@(Model.Id == 0 ? "Create Expense" : "Edit Expense")</h2>
 
-<form asp-action="CreateEditExpenseForm" method="post">
+<form asp-action="CreateEditExpense" method="post">
     @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @* Keep SerialNumber for edits; for creates server will assign one *@
+    <input type="hidden" asp-for="SerialNumber" />
+
+    @* Provide hidden defaults for fields not present in the UI so server validation can succeed *@
+    <input type="hidden" asp-for="Color" value="Unknown" />
+    <input type="hidden" asp-for="Size" value="OneSize" />
 
     @if (Model.Id != 0)
     {
@@ -31,7 +40,7 @@
     <div class="form-group mb-3">
         <label>User</label>
         <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserList">
-            <option value="">--- Select User ---</option>
+            <option value="0">--- Select User ---</option>
         </select>
         <span asp-validation-for="UserId" class="text-danger"></span>
     </div>
