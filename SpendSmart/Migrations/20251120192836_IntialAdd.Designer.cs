@@ -10,8 +10,8 @@ using SpendSmart.Models;
 namespace SpendSmart.Migrations
 {
     [DbContext(typeof(SpendSmartDbContext))]
-    [Migration("20251120070912_AddUserExpenseRelationship")]
-    partial class AddUserExpenseRelationship
+    [Migration("20251120192836_IntialAdd")]
+    partial class IntialAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,7 @@ namespace SpendSmart.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Quantity")
@@ -57,7 +58,7 @@ namespace SpendSmart.Migrations
                     b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("SpendSmart.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,7 +86,7 @@ namespace SpendSmart.Migrations
 
             modelBuilder.Entity("SpendSmart.Models.Expense", b =>
                 {
-                    b.HasOne("User", "User")
+                    b.HasOne("SpendSmart.Models.User", "User")
                         .WithMany("Expenses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -94,7 +95,7 @@ namespace SpendSmart.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("SpendSmart.Models.User", b =>
                 {
                     b.Navigation("Expenses");
                 });

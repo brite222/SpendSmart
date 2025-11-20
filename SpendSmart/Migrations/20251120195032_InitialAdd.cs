@@ -5,7 +5,7 @@
 namespace SpendSmart.Migrations
 {
     /// <inheritdoc />
-    public partial class DbUpdate : Migration
+    public partial class InitialAdd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

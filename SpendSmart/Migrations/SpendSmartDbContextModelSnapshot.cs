@@ -28,6 +28,7 @@ namespace SpendSmart.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Quantity")
